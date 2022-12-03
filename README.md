@@ -1,37 +1,97 @@
 # ChoronSupport
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/choron_support`. To experiment with that code, run `bin/console` for an interactive prompt.
+Choron Support は Rails に便利な機能をいくつか提供する、生産性を向上するためのGemです
 
-TODO: Delete this and the text above, and describe your gem
+## インストール
 
-## Installation
+```bash
+$ gem install choron_support
+```
 
-Install the gem and add to the application's Gemfile by executing:
+```Gemfile:ruby
+gem "choron_support"
+```
 
-    $ bundle add choron_support
+### Rails
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+* config/initializers/choron.rb を作成し以下のコードを記載してください
 
-    $ gem install choron_support
 
-## Usage
+```config/initializers/choron.rb
+ChoronSupport.using :all
+```
 
-TODO: Write usage instructions here
+## 使い方
 
-## Development
+* 必要に応じて各種モジュールをincludeすることで利用できます
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+### AsProps
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+* TODO
 
-## Contributing
+### Domain
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/choron_support. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/choron_support/blob/main/CODE_OF_CONDUCT.md).
+* TODO
+
+### Forms
+
+* TODO
+
+### Query
+
+* TODO
+
+## Develop
+
+Dockerを起動することで開発環境が整います
+
+* Docker Image の作成
+
+```bash
+make d-build
+```
+
+* Docker コンテナの起動
+
+```bash
+make run
+```
+
+* テスト用のDBおよびテーブルの作成 & RSpecの実行
+  * spec/spec_helper.rb を開いて下記にあるDBの作成/Tableの作成のフラグを true に書き換えてから、テストを実行してください
+    * `bin/rspec spec`
+
+
+## 本Gemの思想
+
+Railsにはこれまで多くのリファクタリング手法が、多くの人々から提案されてきました。
+その中で本Gemは以下の思想をサポートするようにしています
+
+* レイヤーを多く作らずにModelへ処理を凝集する
+  * Railsがデフォルトで用意してくれている `controllers`, `models`, `views` といったレイヤーのみをできるだけ使い、独自のレイヤーを**あまり**追加しない
+* Modelの見通しをよくするためにファイル内の処理を委譲させる
+  * 委譲先のクラスはModel以外からは直接呼び出さない(必ずModelにpublicなメソッドを経由させる)
+
+これによりドメインの知識をModelレイヤーに集めつつ、
+中規模以上のシステムになってきた際のファットモデルによる問題を解消する取り組みを行います
+
+### 具体的な取り組み
+
+Modelの中で行われる処理の中でも、本Gemは以下の処理を簡易に別クラスへ委譲させます
+
+* ビジネスロジック・ドメインロジック
+* DBへのアクセス・取得
+* データを表示するための加工(json化)
+
+
+---
+
+以下、TODO
+
+---
+
+
 
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the ChoronSupport project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/choron_support/blob/main/CODE_OF_CONDUCT.md).

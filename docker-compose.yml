@@ -1,0 +1,22 @@
+version: '3'
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: root
+    ports:
+      - 13306:3306
+    volumes:
+      - ./containers/db/data:/var/lib/mysql
+  web:
+    build: .
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app
+      - ./vendor/bundle:/usr/local/bundle
+    links:
+      - db
+    depends_on:
+      - db

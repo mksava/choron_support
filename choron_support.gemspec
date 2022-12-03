@@ -32,7 +32,18 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  # spec.add_dependency "example-gem", "~> 1.0"
+  spec.add_dependency "activesupport"
+  spec.add_development_dependency "activerecord"
+  spec.add_development_dependency "ridgepole"
+  spec.add_development_dependency "mysql2"
+  spec.add_development_dependency "spring"
+  spec.add_development_dependency "spring-commands-rspec"
+  spec.add_development_dependency "pry-rails"
+  spec.add_development_dependency "pry-byebug"
+  spec.add_development_dependency "yard"
+  spec.add_development_dependency "factory_bot_rails"
+  spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "rspec-parameterized"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

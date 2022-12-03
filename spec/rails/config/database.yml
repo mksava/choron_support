@@ -1,0 +1,7 @@
+adapter: mysql2
+encoding: utf8
+database: choron_support
+host: db
+port: 3306
+username: root
+password: root
