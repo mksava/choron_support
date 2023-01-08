@@ -7,7 +7,7 @@ module ChoronSupport
       serializer = self.__get_props_class(type_symbol, **params)
 
       if serializer.nil?
-        {}
+          self.as_json
       else
         serializer.as_props(**params)
       end
@@ -38,8 +38,16 @@ module ChoronSupport
         props_class = props_class_name.constantize
 
         props_class.new(self)
-      rescue
+      rescue *rescue_errors
         return nil
+      end
+    end
+
+    def rescue_errors
+      if defined?(Zeitwerk)
+        [NameError, Zeitwerk::NameError]
+      else
+        [NameError]
       end
     end
   end

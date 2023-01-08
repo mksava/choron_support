@@ -55,6 +55,16 @@ RSpec.describe ChoronSupport::AsProps do
     end
   end
 
+  describe Comment do
+    let!(:comment) { build(:comment, id: 3, title: "Hello", body: "World") }
+    describe "#as_props" do
+      it "called AR#as_json" do
+        props = comment.as_props
+        expect(props).to eq({ "id" => 3, "title" => "Hello", "body" => "World", "created_at" => nil, "updated_at" => nil, "user_id" => nil })
+      end
+    end
+  end
+
   describe ActiveRecord::Relation do
     before do
       create(:user, id: 1, name: "cat", email: "mail1@example.com")

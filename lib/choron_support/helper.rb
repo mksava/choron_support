@@ -17,11 +17,17 @@ module ChoronSupport
           namespace = "#{namespaces}::#{model_name.pluralize}"
         end
 
+        target_class_name = "#{namespace}::#{class_symbol.to_s.camelize}"
+        # ? 終わりはクラスに変換できないため
+        if target_class_name.end_with?("?")
+          target_class_name.chop!
+        end
+
         # 例: Queries::Users::NotLogined
         target_class = nil
         begin
-          target_class = "#{namespace}::#{class_symbol.to_s.camelize}".constantize
-        rescue => e
+          target_class = target_class_name.constantize
+        rescue NameError => e
           if exception
             raise e
           end

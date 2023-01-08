@@ -27,7 +27,50 @@ ChoronSupport.using :all
 
 ### AsProps
 
-* TODO
+`#as_props` はオブジェクトやモデルをhashに変換するものです。
+
+名前の `props` の由来は `React` からきています。
+由来の通り、RailsからJS側へ値を渡す際にオブジェクトをJSON化するために作られました。
+
+#### 使い方
+
+* ActiveRecord
+
+```ruby
+class User < ApplicationRecord
+  include ChoronSupport::AsProps
+  # id: bigint
+  # name: string
+end
+
+# ActiveRecordから利用
+User.new.as_props
+#=> { id: nil, name: nil }
+
+User.create(id: 1, name: "tarou")
+
+User.find(1).as_props
+#=> { id: 1, name: "tarou" }
+
+# ActiveRecord::Relationからでも利用できます
+users = User.all.as_props
+#=> [
+#  { id: 1, name: "tarou" },
+# ]
+
+class Props::User < ChoronSupport::Props::Base
+  def as_props
+    model
+      .as_json
+      .merge(
+        name: "tanaka #{model.name}"
+      )
+  end
+end
+
+user = User.find(1).as_props
+#=> { id: 1, name: "tanaka tarou" }
+```
 
 ### Domain
 
