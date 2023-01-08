@@ -34,6 +34,27 @@ RSpec.describe ChoronSupport::AsProps do
     end
   end
 
+  describe Master::Plan do
+    let!(:master_plan) { build(:master_plan, id: 12, name: "planA") }
+    describe "#as_props" do
+      context "(when no symbol)" do
+        it do
+          props = master_plan.as_props
+          expect(props).to eq({ id: 12, name: "planA" })
+        end
+      end
+
+      context "(when given :compare symbol)" do
+        context "(when no args)" do
+          it do
+            props = master_plan.as_props(:add)
+            expect(props).to eq({ id: 12, name: "planA", addSpec: "hello" })
+          end
+        end
+      end
+    end
+  end
+
   describe ActiveRecord::Relation do
     before do
       create(:user, id: 1, name: "cat", email: "mail1@example.com")

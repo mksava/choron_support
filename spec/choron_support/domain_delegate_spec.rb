@@ -35,4 +35,12 @@ RSpec.describe ChoronSupport::DomainDelegate do
       end
     end
   end
+
+  describe Master::Plan do
+    let!(:master_plan) { build(:master_plan, id: 10) }
+    describe "#register" do
+      subject { master_plan.register }
+      it { is_expected.to eq "10だよ" }
+    end
+  end
 end

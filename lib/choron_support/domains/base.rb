@@ -7,7 +7,7 @@ module ChoronSupport
 
         # Modelにアクセスするためのメソッドを作成する
         # Userであれば user, UserFeedBack であれば user_feed_back というように単数系スネークケースでアクセス可能にする
-        model_method_name = model.class.to_s.underscore
+        model_method_name = model.class.to_s.underscore.gsub("/", "_")
         self.define_singleton_method(model_method_name) do
           @model
         end

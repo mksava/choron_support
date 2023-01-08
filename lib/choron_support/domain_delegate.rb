@@ -13,10 +13,22 @@ module ChoronSupport
       # @param [Symbol] option domain_to_method 委譲先のDomainクラスの呼び出しメソッドを指定できます。デフォルトは :call です
       # @exampl
       #   class User < ApplicationRecord
-      #     domain_for :purchase
+      #     domain_delegate :purchase
       #     #=>
       #       def purchase(item)
-      #         Domains::Users::Purchase.new(self).run(item)
+      #         Domains::Users::Purchase.new(self).call(item)
+      #       end
+      #
+      #     domain_delegate :purchase, specific: false
+      #     #=>
+      #       def run_get(item)
+      #         Domains::Purchase.new(self).call(item)
+      #       end
+      #
+      #     domain_delegate :purchase, specific: false, class_name: "Domains::Buy", to: :buy_user
+      #     #=>
+      #       def purchase(item)
+      #         Domains::Buy.new(self).buy_user(item)
       #       end
       #   end
       def self.domain_delegate(method_symbol, specific: true, class_name: nil, to: :call)
