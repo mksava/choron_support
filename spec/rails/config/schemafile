@@ -15,3 +15,9 @@ create_table "comments", id: :bigint, unsigned: true, force: :cascade, options: 
   t.datetime "updated_at", precision: 6, null: false
   t.datetime "created_at", precision: 6, null: false
 end
+
+create_table "master_plans", id: :bigint, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "マスタプラン" do |t|
+  t.string "name", limit: 191, default: "", null: false
+  t.datetime "updated_at", precision: 6, null: false
+  t.datetime "created_at", precision: 6, null: false
+end

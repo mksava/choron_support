@@ -26,7 +26,7 @@ module ChoronSupport
         props_class_name = "#{namespace}::#{class_name}"
       when nil
         namespace = "Props"
-        # 例: User
+        # 例: User / Master::Plan
         class_name = self.class.to_s
         # 例: Props::User
         props_class_name = "#{namespace}::#{class_name}"
