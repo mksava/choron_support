@@ -13,7 +13,7 @@ module ChoronSupport
           end
         end
 
-        if model_name.present?
+        unless model_name.to_s.empty?
           namespace = "#{namespaces}::#{model_name.pluralize}"
         end
 

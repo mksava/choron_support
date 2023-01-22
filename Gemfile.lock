@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    choron_support (0.1.3)
+    choron_support (0.1.4)
       activesupport
 
 GEM

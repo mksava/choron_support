@@ -26,7 +26,7 @@ module ChoronSupport
       # @return [String]
       def like_sanitize(string)
         str = string.to_s
-        return "" if str.blank?
+        return "" if str.empty?
 
         ApplicationRecord.sanitize_sql_like(str)
       end
