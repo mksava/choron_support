@@ -16,7 +16,7 @@ module ChoronSupport
 
       def self.scope_query(query, specific: true, class_name: nil)
         # 直接Queryクラスを指定されていたらすぐにscopeにプロキシして返す
-        if class_name.present?
+        if !class_name.to_s.empty?
           query_class = class_name.to_s.constantize
         else
           namespace = "Queries"
