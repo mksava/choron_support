@@ -57,10 +57,20 @@ RSpec.describe ChoronSupport::AsProps do
 
   describe Comment do
     let!(:comment) { build(:comment, id: 3, title: "Hello", body: "World") }
-    describe "#as_props" do
-      it "called AR#as_json" do
-        props = comment.as_props
-        expect(props).to eq({ "id" => 3, "title" => "Hello", "body" => "World", "created_at" => nil, "updated_at" => nil, "user_id" => nil })
+    context "(when no symbol)" do
+      describe "#as_props" do
+        it "called AR#as_json" do
+          props = comment.as_props
+          expect(props).to eq({ "id" => 3, "title" => "Hello", "body" => "World", "created_at" => nil, "updated_at" => nil, "user_id" => nil })
+        end
+      end
+    end
+
+    context "(when given :compare symbol)" do
+      describe "#as_props" do
+        it "(raise ChoronSupport::AsProps::NameError)" do
+          expect { comment.as_props(:compare) }.to raise_error(ChoronSupport::AsProps::NameError)
+        end
       end
     end
   end
