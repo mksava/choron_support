@@ -13,21 +13,28 @@ RSpec.describe ChoronSupport::AsProps do
         context "(when no args)" do
           it do
             props = user.as_props(:compare)
-            expect(props).to eq({ userId: 10, compareSpec: "compare" })
+            expect(props).to eq({ userId: 10, compareSpec: "compare", comment: "hello" })
+          end
+        end
+
+        context "(when { comment: 'spec'} )" do
+          it do
+            props = user.as_props(:compare, comment: "spec")
+            expect(props).to eq({ userId: 10, compareSpec: "compare", comment: "spec" })
           end
         end
 
         context "(when { camel: true })" do
           it do
             props = user.as_props(:compare, camel: true)
-            expect(props).to eq({ userId: 10, compareSpec: "compare" })
+            expect(props).to eq({ userId: 10, compareSpec: "compare", comment: "hello" })
           end
         end
 
         context "(when { camel: false })" do
           it do
             props = user.as_props(:compare, camel: false)
-            expect(props).to eq({ user_id: 10, compare_spec: "compare" })
+            expect(props).to eq({ user_id: 10, compare_spec: "compare", comment: "hello" })
           end
         end
       end
@@ -57,10 +64,20 @@ RSpec.describe ChoronSupport::AsProps do
 
   describe Comment do
     let!(:comment) { build(:comment, id: 3, title: "Hello", body: "World") }
-    describe "#as_props" do
-      it "called AR#as_json" do
-        props = comment.as_props
-        expect(props).to eq({ "id" => 3, "title" => "Hello", "body" => "World", "created_at" => nil, "updated_at" => nil, "user_id" => nil })
+    context "(when no symbol)" do
+      describe "#as_props" do
+        it "called AR#as_json" do
+          props = comment.as_props
+          expect(props).to eq({ id: 3, title: "Hello", body: "World", createdAt: nil, updatedAt: nil, userId: nil })
+        end
+      end
+    end
+
+    context "(when given :compare symbol)" do
+      describe "#as_props" do
+        it "(raise ChoronSupport::AsProps::NameError)" do
+          expect { comment.as_props(:compare) }.to raise_error(ChoronSupport::AsProps::NameError)
+        end
       end
     end
   end
@@ -85,26 +102,26 @@ RSpec.describe ChoronSupport::AsProps do
           it do
             props = User.all.as_props(:compare)
             expect(props.size).to eq 2
-            expect(props[0]).to eq({ userId: 1, compareSpec: "compare" })
-            expect(props[1]).to eq({ userId: 2, compareSpec: "compare" })
+            expect(props[0]).to eq({ userId: 1, compareSpec: "compare", comment: "hello" })
+            expect(props[1]).to eq({ userId: 2, compareSpec: "compare", comment: "hello" })
           end
         end
 
-        context "(when { camel: true })" do
+        context "(when { camel: true, comment: 'spec' })" do
           it do
-            props = User.all.as_props(:compare)
+            props = User.all.as_props(:compare, camel: true, comment: "spec")
             expect(props.size).to eq 2
-            expect(props[0]).to eq({ userId: 1, compareSpec: "compare" })
-            expect(props[1]).to eq({ userId: 2, compareSpec: "compare" })
+            expect(props[0]).to eq({ userId: 1, compareSpec: "compare", comment: "spec" })
+            expect(props[1]).to eq({ userId: 2, compareSpec: "compare", comment: "spec" })
           end
         end
 
-        context "(when { camel: false })" do
+        context "(when { camel: false, comment: 'spec' })" do
           it do
-            props = User.all.as_props(:compare, camel: false)
+            props = User.all.as_props(:compare, camel: false, comment: "spec")
             expect(props.size).to eq 2
-            expect(props[0]).to eq({ user_id: 1, compare_spec: "compare" })
-            expect(props[1]).to eq({ user_id: 2, compare_spec: "compare" })
+            expect(props[0]).to eq({ user_id: 1, compare_spec: "compare", comment: "spec" })
+            expect(props[1]).to eq({ user_id: 2, compare_spec: "compare", comment: "spec" })
           end
         end
       end

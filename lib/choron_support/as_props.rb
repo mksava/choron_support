@@ -3,13 +3,19 @@ require_relative "props/ext/relation"
 require_relative "props/ext/hash"
 module ChoronSupport
   module AsProps
+    class NameError < StandardError; end
+    # @param [Symbol, String, nil] type_symbol どのPropsクラスを利用してPropsを生成するかを指定するシンボル。nilのときはデフォルトのPropsクラスを利用する。
+    # @param [Hash] params その他のパラメータ。camel: false を指定すると自動でキャメライズしない。
+    # @return [Hash]
     def as_props(type_symbol = nil, **params)
       serializer = self.__get_props_class(type_symbol, **params)
 
+      skip_camel = (params[:camel] == false)
+      pass_params = params.except(:camel)
       if serializer.nil?
-          self.as_json
+        skip_camel ? self.as_json : self.as_json.as_camel
       else
-        serializer.as_props(**params)
+        skip_camel ? serializer.as_props(**pass_params) : serializer.as_props(**pass_params).as_camel
       end
     end
 
@@ -39,15 +45,19 @@ module ChoronSupport
 
         props_class.new(self)
       rescue *rescue_errors
-        return nil
+        if type_symbol.blank?
+          return nil
+        else
+          raise ChoronSupport::AsProps::NameError, "Props class not found: #{props_class_name}. Got type symbol: #{type_symbol}."
+        end
       end
     end
 
     def rescue_errors
       if defined?(Zeitwerk)
-        [NameError, Zeitwerk::NameError]
+        [::NameError, Zeitwerk::NameError]
       else
-        [NameError]
+        [::NameError]
       end
     end
   end
