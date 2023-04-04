@@ -2,10 +2,21 @@ require_relative "domains/base"
 
 module ChoronSupport
   module DomainDelegate
+    class DelegationError < NoMethodError; end
     extend ActiveSupport::Concern
 
     included do
       extend Forwardable
+
+      # Forwardable が ActiveSupport#delegate を上書きしてしまうため、間違って使ったときのためエラーをraiseするようにしています
+      def self.delegate(*params, **keyparams)
+        # delegate :hoge, to: :fuga という形で呼び出された場合は、エラーをraiseする
+        if keyparams[:to].present?
+          raise DelegationError, "ActiveSupport#delegate is not usable. Please use Forwardable#delegate.\n@example\n  delegate size: :array"
+        else
+          super
+        end
+      end
 
       # QueryオブジェクトパターンをEasyに使うためのクラスメソッドです
       # @param [Symbol] method_name Modelに定義されるメソッド名

@@ -49,4 +49,10 @@ class User < ApplicationRecord
   class_domain_delegate :age_destroy, class_name: :age_manage, to: :destroy
 
   include ChoronSupport::AsProps
+
+  # Delegateをオーバーライドしているため
+  delegate delegate_foo: :delegate_obj
+  def delegate_obj
+    Struct.new(:delegate_foo).new("call delegate_foo")
+  end
 end
