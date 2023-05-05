@@ -65,12 +65,6 @@ RSpec.describe ChoronSupport::DomainDelegate do
           expect(result).to eq "call delegate_foo"
         end
       end
-
-      describe ".delegate" do
-        it "raise DelegationError" do
-          expect { User.delegate(:foo, to: :bar) }.to raise_error(ChoronSupport::DomainDelegate::DelegationError)
-        end
-      end
     end
   end
 

@@ -6,19 +6,7 @@ module ChoronSupport
     extend ActiveSupport::Concern
 
     included do
-      extend Forwardable
-
-      # Forwardable が ActiveSupport#delegate を上書きしてしまうため、間違って使ったときのためエラーをraiseするようにしています
-      def self.delegate(*params, **keyparams)
-        # delegate :hoge, to: :fuga という形で呼び出された場合は、エラーをraiseする
-        if keyparams[:to].present?
-          raise DelegationError, "ActiveSupport#delegate is not usable. Please use Forwardable#delegate.\n@example\n  delegate size: :array"
-        else
-          super
-        end
-      end
-
-      # QueryオブジェクトパターンをEasyに使うためのクラスメソッドです
+      # 処理を別クラスに委任する設定をEasyに使うためのクラスメソッドです
       # @param [Symbol] method_name Modelに定義されるメソッド名
       # @param [Choron::Domains::Base] option domain Domainクラスを文字列で直接指定することができます。シンボルを渡すとクラス化を自動で行います。デフォルトはnilです。
       # @param [Symbol] option domain_to_method 委譲先のDomainクラスの呼び出しメソッドを指定できます。デフォルトは :call です
@@ -60,7 +48,9 @@ module ChoronSupport
         # ドメインオブジェクトにデリゲートさせます
         # 例: def_delegator :__domains_users_purchase_object__, :call, :purchase
         #    purchase メソッドを __domains_xxx__ の call メソッドにデリゲートする
-        def_delegator domain_object_method_name, to, method_symbol
+        define_method(method_symbol) do |*args, **keyparams, &block|
+          send(domain_object_method_name).send(to, *args, **keyparams, &block)
+        end
       end
 
       # domain_delegate とほぼ同じ動きですが、こちらはクラスメソッドをデリゲートするものです。
@@ -88,18 +78,8 @@ module ChoronSupport
       def self.class_domain_delegate(method_symbol, specific: true, class_name: nil, to: :call)
         domain_class = __generate_choron_domain_class(method_symbol, specific, class_name)
 
-        # どのような引数でもデリゲートできるようにしています
-        define_singleton_method(method_symbol) do |*params, **keyparams|
-          case [!params.empty?, !keyparams.empty?]
-          when [true, true]
-            domain_class.new(self).send(to, *params, **keyparams)
-          when [true, false]
-            domain_class.new(self).send(to, *params)
-          when [false, true]
-            domain_class.new(self).send(to, **keyparams)
-          else
-            domain_class.new(self).send(to)
-          end
+        define_singleton_method(method_symbol) do |*params, **keyparams, &block|
+          domain_class.new(self).send(to, *params, **keyparams, &block)
         end
       end
 

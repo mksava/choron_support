@@ -50,8 +50,9 @@ class User < ApplicationRecord
 
   include ChoronSupport::AsProps
 
-  # Delegateをオーバーライドしているため
-  delegate delegate_foo: :delegate_obj
+  # デグレ確認。Railsのdelegateメソッドを利用できることを確認するため
+  # @note 0.1.6以前では利用できない不具合があった
+  delegate :delegate_foo, to: :delegate_obj
   def delegate_obj
     Struct.new(:delegate_foo).new("call delegate_foo")
   end
