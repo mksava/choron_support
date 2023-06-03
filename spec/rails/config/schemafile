@@ -21,3 +21,13 @@ create_table "master_plans", id: :bigint, unsigned: true, force: :cascade, optio
   t.datetime "updated_at", precision: 6, null: false
   t.datetime "created_at", precision: 6, null: false
 end
+
+create_table "masking_users", id: :bigint, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "マスク用テストユーザ" do |t|
+  t.string "name", limit: 191, default: "", null: false
+  t.boolean "is_super_man", default: false, null: false
+  t.integer "weight"
+  t.float "height"
+  t.date "birth_date"
+  t.datetime "updated_at", precision: 6, null: false
+  t.datetime "created_at", precision: 6, null: false
+end
