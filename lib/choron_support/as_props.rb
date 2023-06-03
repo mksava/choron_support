@@ -45,8 +45,13 @@ module ChoronSupport
 
         props_class.new(self)
       rescue *rescue_errors
-        if type_symbol.blank?
+        # もしmodelを指定しているときはnilを返し、as_jsonを利用させる
+        if type_symbol == :model
           return nil
+        end
+
+        if type_symbol.blank?
+          raise ChoronSupport::AsProps::NameError, "Props class not found: #{props_class_name}. Please create props class."
         else
           raise ChoronSupport::AsProps::NameError, "Props class not found: #{props_class_name}. Got type symbol: #{type_symbol}."
         end
