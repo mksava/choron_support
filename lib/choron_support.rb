@@ -6,6 +6,7 @@ module ChoronSupport
     queries: "choron_support/scope_query",
     forms: "choron_support/build_form",
     props: "choron_support/as_props",
+    masks: "choron_support/set_mask_for",
   }
   private_constant :SUPPORT_FILES
 
