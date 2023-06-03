@@ -72,6 +72,13 @@ user = User.find(1).as_props
 #=> { id: 1, name: "tanaka tarou" }
 ```
 
+### Mask
+
+モデルに対してマスク処理をかけ、セキュリティを強くするための仕組みです。
+
+* 詳細な使い方は [テストファイル](./spec/choron_support/set_mask_for_spec.rb) を参照ください。
+* 詳細な実装は [こちら](./lib/choron_support/set_mask_for.rb) です。
+
 ### Domain
 
 * TODO
