@@ -30,5 +30,8 @@ d-build-no-cache:
 install:
 	docker-compose run web bash -c "gem uninstall bundler && gem install bundler -v 2.3.13 && bundle install && yarn install"
 
+spec-db-create:
+	DB_CREATE=true bundle exec rspec spec/*
+
 spec-table-create:
 	bundle exec ridgepole --config ./spec/rails/config/database.yml --file ./spec/rails/config/schemafile --apply

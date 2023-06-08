@@ -27,50 +27,11 @@ ChoronSupport.using :all
 
 ### AsProps
 
-`#as_props` はオブジェクトやモデルをhashに変換するものです。
+モデルをJSON(キーがローキャメルケース)に変換するための仕組みです。
 
-名前の `props` の由来は `React` からきています。
-由来の通り、RailsからJS側へ値を渡す際にオブジェクトをJSON化するために作られました。
+* 詳細な使い方は [テストファイル](./spec/choron_support/as_props_spec.rb) を参照ください。
+* 詳細な実装は [こちら](./lib/choron_support/as_props.rb) です。
 
-#### 使い方
-
-* ActiveRecord
-
-```ruby
-class User < ApplicationRecord
-  include ChoronSupport::AsProps
-  # id: bigint
-  # name: string
-end
-
-# ActiveRecordから利用
-User.new.as_props
-#=> { id: nil, name: nil }
-
-User.create(id: 1, name: "tarou")
-
-User.find(1).as_props
-#=> { id: 1, name: "tarou" }
-
-# ActiveRecord::Relationからでも利用できます
-users = User.all.as_props
-#=> [
-#  { id: 1, name: "tarou" },
-# ]
-
-class Props::User < ChoronSupport::Props::Base
-  def as_props
-    model
-      .as_json
-      .merge(
-        name: "tanaka #{model.name}"
-      )
-  end
-end
-
-user = User.find(1).as_props
-#=> { id: 1, name: "tanaka tarou" }
-```
 
 ### Mask
 
@@ -81,15 +42,27 @@ user = User.find(1).as_props
 
 ### Domain
 
-* TODO
+モデルの処理をメソッド単位で別クラスに委譲するための仕組みです。
+クラスメソッド、インスタンスメソッドの両方で利用できます。
+
+* 詳細な実装と使い方は [こちら](./lib/choron_support/domain_delegate.rb) を確認してください。
 
 ### Forms
 
-* TODO
+ControllerでFormクラスのインスタンスを簡単に生成するための仕組みです。
+
+* 詳細な実装と使い方はいかを参照してください。
+  * [build_form](./lib/choron_support/build_form.rb)
+    * ControllerからFormクラスのインスタンスを簡単に生成するメソッドです
+  * [ChoronSupport::Forms::Base](lib/choron_support/forms/base.rb)
+    * Formクラスのベースとなるクラスです
 
 ### Query
 
-* TODO
+モデルのscope処理を別クラスに異常するための仕組みです。
+もともと存在する `queryパターン` を簡単に使えるようにしたものです。
+
+* 詳細な実装と使い方は [こちら](./lib/choron_support/scope_query.rb) を確認してください。
 
 ## Develop
 
@@ -101,46 +74,36 @@ Dockerを起動することで開発環境が整います
 make d-build
 ```
 
-* Docker コンテナの起動
+* Dockerコンテナの起動
 
 ```bash
 make run
 ```
 
-* テスト用のDBおよびテーブルの作成 & RSpecの実行
-  * spec/spec_helper.rb を開いて下記にあるDBの作成/Tableの作成のフラグを true に書き換えてから、テストを実行してください
-    * `bin/rspec spec`
+* コンテナ内部に入る
 
+```bash
+make web
+```
+
+* テスト用のDBおよびテーブルの作成
+
+※Dockerコンテナ内部で実行してくださ
+
+```bash
+make spec-db-create
+make spec-table-create
+```
+
+* RSpecの実行
+
+```bash
+bin/rspec spec
+```
 
 ## 本Gemの思想
 
-Railsにはこれまで多くのリファクタリング手法が、多くの人々から提案されてきました。
-その中で本Gemは以下の思想をサポートするようにしています
-
-* レイヤーを多く作らずにModelへ処理を凝集する
-  * Railsがデフォルトで用意してくれている `controllers`, `models`, `views` といったレイヤーのみをできるだけ使い、独自のレイヤーを**あまり**追加しない
-* Modelの見通しをよくするためにファイル内の処理を委譲させる
-  * 委譲先のクラスはModel以外からは直接呼び出さない(必ずModelにpublicなメソッドを経由させる)
-
-これによりドメインの知識をModelレイヤーに集めつつ、
-中規模以上のシステムになってきた際のファットモデルによる問題を解消する取り組みを行います
-
-### 具体的な取り組み
-
-Modelの中で行われる処理の中でも、本Gemは以下の処理を簡易に別クラスへ委譲させます
-
-* ビジネスロジック・ドメインロジック
-* DBへのアクセス・取得
-* データを表示するための加工(json化)
-
-
----
-
-以下、TODO
-
----
-
-
+* [こちら](docs/idea.md)を参照ください
 
 ## License
 

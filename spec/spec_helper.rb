@@ -7,7 +7,7 @@ require "pry-rails"
 require "pry-byebug"
 require "yaml"
 require "factory_bot_rails"
-require 'rspec-parameterized'
+require "rspec-parameterized"
 
 # simplecovでコードカバレッジを集計する
 require 'simplecov'
@@ -42,9 +42,9 @@ RSpec.configure do |config|
   # Disable RSpec exposing methods globally on `Module` and `main`
   config.disable_monkey_patching!
 
-  config.before(:each) do
-    User.delete_all
-    Comment.delete_all
+  config.after(:each) do
+    # 自作でDatabaseをクリアしています
+    ApplicationRecord.descendants.each { _1.delete_all }
   end
 
   config.expect_with :rspec do |c|
@@ -55,7 +55,7 @@ end
 db_settings = YAML.load_file("spec/rails/config/database.yml")
 
 # DB作成。必要なときは以下をtrueに変更してください
-db_create = false
+db_create = (ENV["DB_CREATE"] == "true")
 if db_create
   puts "Start DB create..."
   client_settings = db_settings.dup
@@ -63,6 +63,8 @@ if db_create
   client = Mysql2::Client.new(client_settings)
 
   client.query("CREATE DATABASE IF NOT EXISTS #{db_settings["database"]}")
+
+  return
 end
 
 # テーブル作成。必要なときは以下をtrueに変更してください

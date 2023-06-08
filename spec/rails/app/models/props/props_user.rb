@@ -1,5 +1,5 @@
 module Props
-  class User < ChoronSupport::Props::Base
+  class PropsUser < ChoronSupport::Props::Base
     def as_props
       {
         id: model.id,

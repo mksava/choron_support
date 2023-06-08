@@ -1,6 +1,12 @@
 #!/usr/bin/env ruby
 # encoding: utf-8
 
+# テストで利用しているDBのスキーマファイルです
+# RSpec実行前にDBおよびテーブルを作成してください
+# [実行方法]
+#   $ make spec-db-create
+#   $ make spec-table-create
+
 create_table "users", id: :bigint, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "ユーザー" do |t|
   t.string "name", limit: 191, default: "", null: false
   t.string "email", limit: 191, default: "", null: false
@@ -21,6 +27,29 @@ create_table "master_plans", id: :bigint, unsigned: true, force: :cascade, optio
   t.datetime "updated_at", precision: 6, null: false
   t.datetime "created_at", precision: 6, null: false
 end
+
+########## Props ##########
+
+create_table "props_users", id: :bigint, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "ユーザー" do |t|
+  t.string "name", limit: 191, default: "", null: false
+  t.string "email", limit: 191, default: "", null: false
+  t.boolean "is_super_man", default: false, null: false
+  t.integer "weight"
+  t.float "height"
+  t.date "birth_date"
+  t.datetime "updated_at", precision: 6, null: false
+  t.datetime "created_at", precision: 6, null: false
+end
+
+create_table "props_comments", id: :bigint, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "コメント" do |t|
+  t.string "title", limit: 191, default: "", null: false
+  t.string "body", limit: 191, default: "", null: false
+  t.bigint "user_id", null: false
+  t.datetime "updated_at", precision: 6, null: false
+  t.datetime "created_at", precision: 6, null: false
+end
+
+########## Mask ##########
 
 create_table "masking_users", id: :bigint, unsigned: true, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", comment: "マスク用テストユーザ" do |t|
   t.string "name", limit: 191, default: "", null: false

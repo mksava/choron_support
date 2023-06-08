@@ -48,8 +48,6 @@ class User < ApplicationRecord
   #   To: Domains::Users::AgeManage(app/models/domains/users/age_manage.rb#destroy)
   class_domain_delegate :age_destroy, class_name: :age_manage, to: :destroy
 
-  include ChoronSupport::AsProps
-
   # デグレ確認。Railsのdelegateメソッドを利用できることを確認するため
   # @note 0.1.6以前では利用できない不具合があった
   delegate :delegate_foo, to: :delegate_obj

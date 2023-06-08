@@ -1,7 +1,5 @@
 module Master
   class Plan < ApplicationRecord
-    include ChoronSupport::AsProps
-
     self.table_name = "master_plans"
 
     include ChoronSupport::DomainDelegate
