@@ -4,6 +4,7 @@
 #   2.リッチな機能は提供せず、あくまでもクラスに委譲させるだけの責務を持っています
 #     例えば他のgemにあるような attribute というようなDSLの機能はありません
 #     全ては as_props に委譲されます
+#   3.ただし ChoronSupport::Props::Attributes を読み込むと attributes というDSLが使えるようになります
 RSpec.describe ChoronSupport::AsProps do
   # as_props はモデルのインスタンスをjsonに変換します。
   # [使い方]
@@ -18,17 +19,30 @@ RSpec.describe ChoronSupport::AsProps do
   # これにより as_props を使うと上記のクラスの内容に従ってJSONの変換を行います
   #
   # このときのpropsクラスは以下のルールで作成してください
-  #   1.ChoronSupport::Props::Baseを継承する
+  #   1.ChoronSupport::Props::Baseを継承する(もしくはこのクラスを継承したクラスを継承する)
+  #     Choronでは app/models/props/base.rb に継承させ、個別のPropsにはBaseクラスを継承させています
   #   2.as_props というメソッドを作成する
-  #     => この戻り値が最終的に返されるjsonになります
-  # [例] app/models/props/foo.rb
+  #     => この戻り値のHashのキー名がローキャメルケースに変換されたjsonが最終的な出力になります
+  # @example
+  #   [app/models/props/foo.rb]
   #   class Props::Foo < ChoronSupport::Props::Base
   #     def as_props
   #       {
   #          id: model.id,
   #          name: model.name,
+  #          full_name: "#{model.first_name} #{model.last_name}",
   #       }
   #     end
+  #   end
+  # @example Choronの場合
+  #  [app/models/props/base.rb]
+  #  class Props::Foo < Props::Base
+  #    attributes :id, :name
+  #    attributes :full_name, to: :self
+  #    def full_name
+  #      "#{model.first_name} #{model.last_name}"
+  #    end
+  #  end
   describe "#as_props" do
     # ここでは PropsUser というモデルがあることとして使い方を記載しています。
     # 実際のモデルは app/models/props_user.rb を参照してください。
@@ -92,6 +106,22 @@ RSpec.describe ChoronSupport::AsProps do
       context "as_propsの第一引数に存在しないクラス名を渡すとき" do
         it "エラーが発生すること" do
           expect{ user.as_props(:invalid) }.to raise_error(ChoronSupport::AsProps::NameError)
+        end
+      end
+
+      describe Props::PropsUsers::Atr do
+        it "DSLにより各Propsの値が設定されていること" do
+          props = user.as_props(:atr)
+          aggregate_failures do
+            # attributes で設定されたもの
+            expect(props[:id]).to eq 10
+            expect(props[:name]).to eq "cat"
+
+            # メタ情報
+            expect(props[:modelName]).to eq "PropsUser"
+            expect(props[:propsClassName]).to eq "Props::PropsUsers::Atr"
+            expect(props[:type]).to eq "PropsUser"
+          end
         end
       end
     end

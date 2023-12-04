@@ -8,6 +8,8 @@
 /tmp/
 !/tmp/.keep
 
+node_modules/
+
 # rspec failure tracking
 .rspec_status
 

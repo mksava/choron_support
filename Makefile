@@ -12,7 +12,7 @@ run:
 	docker-compose up
 
 web:
-	eval "docker exec -it `docker ps | grep _web_ | cut -d' ' -f1` /bin/bash"
+	eval "docker exec -it `docker ps | grep choron_support-web- | cut -d' ' -f1` /bin/bash"
 
 clean:
 	docker system prune

@@ -1,4 +1,5 @@
 require_relative "props/base"
+require_relative "props/attributes"
 require_relative "props/ext/relation"
 require_relative "props/ext/hash"
 module ChoronSupport
@@ -8,7 +9,7 @@ module ChoronSupport
     # @param [Hash] params その他のパラメータ。camel: false を指定すると自動でキャメライズしない。
     # @return [Hash]
     def as_props(type_symbol = nil, **params)
-      serializer = self.__get_props_class(type_symbol, **params)
+      serializer = self.__get_props_class(type_symbol, params)
 
       skip_camel = (params[:camel] == false)
       pass_params = params.except(:camel)
@@ -21,7 +22,7 @@ module ChoronSupport
 
     private
 
-    def __get_props_class(type_symbol, **params)
+    def __get_props_class(type_symbol, params)
       case type_symbol
       when Symbol, String
         # 名前空間の例: Serialize::Users
@@ -43,7 +44,7 @@ module ChoronSupport
       begin
         props_class = props_class_name.constantize
 
-        props_class.new(self)
+        props_class.new(self, params)
       rescue *rescue_errors
         # もしmodelを指定しているときはnilを返し、as_jsonを利用させる
         if type_symbol == :model
