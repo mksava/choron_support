@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+ENV["RAILS_ENV"] ||= "test"
+
 puts "Load gem files..."
 require "active_record"
 require "mysql2"
@@ -64,7 +66,7 @@ if db_create
 
   client.query("CREATE DATABASE IF NOT EXISTS #{db_settings["database"]}")
 
-  return
+  exit 0
 end
 
 # テーブル作成。必要なときは以下をtrueに変更してください
