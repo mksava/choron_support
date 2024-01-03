@@ -28,6 +28,12 @@ end
 puts "Load files..."
 
 require "choron_support"
+
+# Zeitwerkを入れていないため手動で先にmoduleを作っています
+module Users; end
+module Domains; end
+module Master; end
+module Queris; end
 require_relative "rails/config/initializers/choron"
 
 Dir[File.join(__dir__, 'rails/**/*.rb')].each {|file| require file }
