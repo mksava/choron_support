@@ -1,6 +1,12 @@
 # frozen_string_literal: true
 
 module ChoronSupport
+  module Domains; end
+  module Forms; end
+  module Props; end
+  module Props::Private; end
+  module Queries; end
+
   SUPPORT_FILES = {
     domains: "choron_support/domain_delegate",
     queries: "choron_support/scope_query",

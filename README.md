@@ -25,13 +25,9 @@ ChoronSupport.using :all
 
 * 必要に応じて各種モジュールをincludeすることで利用できます
 
-### AsProps
+### Props
 
-モデルをJSON(キーがローキャメルケース)に変換するための仕組みです。
-
-* 詳細な使い方は [テストファイル](./spec/choron_support/as_props_spec.rb) を参照ください。
-* 詳細な実装は [こちら](./lib/choron_support/as_props.rb) です。
-
+* [Props ドキュメント](./docs/props.md)を参照ください
 
 ### Mask
 
