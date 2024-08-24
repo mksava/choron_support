@@ -7,7 +7,7 @@ module ChoronSupport
         @records = model_class.try!(:all)
       end
 
-        # 各種このメソッドをオーバーライドしてください
+      # 各種このメソッドをオーバーライドしてください
       def call
         raise NotImplementedError
         # @example 実装例

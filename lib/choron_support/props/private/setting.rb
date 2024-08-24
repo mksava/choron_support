@@ -4,14 +4,14 @@ class ChoronSupport::Props::Private::Setting
   NO_DEFAULT = Object.new.freeze
   private_constant :NO_DEFAULT
   SETTING_ATTRIBUTES = %i[method name to cast default if block].freeze
-  private_constant :SETTING_ATTRIBUTES
 
-  SETTING_ATTRIBUTES.each {|atr_name| attr_reader atr_name }
+  SETTING_ATTRIBUTES.each { |atr_name| attr_reader atr_name }
 
   def initialize(params)
     # 不正なオプションがあれば例外を発生させる
     if (params.keys - SETTING_ATTRIBUTES).present?
-      raise Error, "invalid params: #{(params.keys - SETTING_ATTRIBUTES).join(", ")}, valid params are #{SETTING_ATTRIBUTES.join(", ")}"
+      raise Error,
+            "invalid params: #{(params.keys - SETTING_ATTRIBUTES).join(', ')}, valid params are #{SETTING_ATTRIBUTES.join(', ')}"
     end
 
     @method = params[:method]
@@ -26,17 +26,15 @@ class ChoronSupport::Props::Private::Setting
   end
 
   def set_default?
-    self.default != NO_DEFAULT
+    default != NO_DEFAULT
   end
 
   private
 
   def check_params!
-    if name.blank?
-      raise Error, "name is required"
-    end
-    if method.blank?
-      raise Error, "method is required"
-    end
+    raise Error, "name is required" if name.blank?
+    return unless method.blank?
+
+    raise Error, "method is required"
   end
 end

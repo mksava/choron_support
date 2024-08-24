@@ -27,7 +27,7 @@ module ChoronSupport
     module_names.to_a.each do |module_name|
       case module_name.to_sym
       when :all
-        SUPPORT_FILES.each do |key, file_name|
+        SUPPORT_FILES.each do |_key, file_name|
           require file_name
         end
       else

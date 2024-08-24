@@ -16,12 +16,12 @@ module ChoronSupport
 
       def self.scope_query(query, specific: true, class_name: nil)
         # 直接Queryクラスを指定されていたらすぐにscopeにプロキシして返す
-        if !class_name.to_s.empty?
-          query_class = class_name.to_s.constantize
-        else
+        if class_name.to_s.empty?
           namespace = "Queries"
           model_name = specific ? self.to_s : nil
           query_class = ChoronSupport::Helper.generate_choron_class(namespace, model_name, query)
+        else
+          query_class = class_name.to_s.constantize
         end
 
         # ActiveRecordのscopeメソッドを呼びます

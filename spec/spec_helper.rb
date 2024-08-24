@@ -12,8 +12,8 @@ require "factory_bot_rails"
 require "rspec-parameterized"
 
 # simplecovでコードカバレッジを集計する
-require 'simplecov'
-# TODO この begin~rescue~endの対応は時期を見て削除する
+require "simplecov"
+# TODO: この begin~rescue~endの対応は時期を見て削除する
 # Github workflow 環境で以下のエラーが発生するためrescueでキャッチさせて無視しています
 # RuntimeError:
 #   coverage measurement is already setup
@@ -21,7 +21,7 @@ require 'simplecov'
 # ローカルでは起きていないためキャッシュなどが悪さをしている可能性があります
 begin
   SimpleCov.start
-rescue => e
+rescue StandardError => e
   puts e
 end
 
@@ -36,8 +36,8 @@ module Master; end
 module Queris; end
 require_relative "rails/config/initializers/choron"
 
-Dir[File.join(__dir__, 'rails/**/*.rb')].each {|file| require file }
-Dir[File.join(__dir__, 'factories/**/*.rb')].each {|file| require file }
+Dir[File.join(__dir__, "rails/**/*.rb")].each { |file| require file }
+Dir[File.join(__dir__, "factories/**/*.rb")].each { |file| require file }
 
 puts "Start RSpec configure..."
 RSpec.configure do |config|
