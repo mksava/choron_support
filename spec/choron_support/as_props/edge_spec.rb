@@ -25,7 +25,7 @@ class Props::PropsUsers::EdgeOverride < Props::Base
   def as_props
     {
       dummy: "dummy",
-      over: params[:over],
+      over: params[:over]
     }
   end
 end

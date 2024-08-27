@@ -9,7 +9,7 @@ module ChoronSupport
     MASKING_VALUES = { string: "****", else: nil }.freeze
 
     included do
-      def self.set_mask_for(*method_symbols, condition: nil)
+      def self.set_mask_for(*method_symbols)
         method_symbols.each do |method_symbol|
           self.instance_eval { private attr_accessor WITH_OUT_MASK_FLAG_VARIABLE_NAME }
           define_method(method_symbol) do
@@ -34,11 +34,11 @@ module ChoronSupport
 
           # マスクの値に関係なく元の値を取得するためのメソッドです。
           define_method("danger_without_mask_#{method_symbol}") do
-            val = nil
+            origin = nil
             self.without_mask do |model|
-              val = model.send(method_symbol)
+              origin = model.send(method_symbol)
             end
-            val
+            origin
           end
         end
 

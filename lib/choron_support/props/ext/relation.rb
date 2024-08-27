@@ -5,6 +5,6 @@ class ActiveRecord::Relation
       return {}
     end
 
-    records.map {|record| record.as_props(type_symbol, **params) }
+    records.map { |record| record.as_props(type_symbol, **params) }
   end
 end

@@ -7,25 +7,20 @@ module ChoronSupport
 
       # @param [ActiveRecord::Base] model Props対象のモデルのインスタンス
       # @param [Hash] params その他のパラメータ
+      # @param [Boolean] params params[:only] 指定した属性のみを出力します
+      # @param [Boolean] params params[:except] 指定した属性を出力しません
       def initialize(model, params = {})
         @model = model
-        @params = params
+        @params = params.to_h
       end
 
       private
 
       # @override
-      def model
-        @model
-      end
+      attr_reader :model
 
       # @override
-      def params
-        @params
-      end
+      attr_reader :params
     end
   end
 end
-
-__END__
-abcd

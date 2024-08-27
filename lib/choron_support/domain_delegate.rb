@@ -35,7 +35,7 @@ module ChoronSupport
 
         # 被ることがないようにど__をつけてメソッド名を定義します
         # 例: :__domains_users_purchase_object__
-        domain_object_method_name = ("__" + domain_class.to_s.underscore.gsub("/", "_") + "_object__").to_sym
+        domain_object_method_name = "__#{domain_class.to_s.underscore.gsub('/', '_')}_object__".to_sym
 
         define_method(domain_object_method_name) do
           # ドメインオブジェクトをインスタンス化したものを返します
@@ -82,8 +82,6 @@ module ChoronSupport
           domain_class.new(self).send(to, *params, **keyparams, &block)
         end
       end
-
-      private
 
       def self.__generate_choron_domain_class(method_symbol, specific, class_name)
         # クラス名指定なしのときはメソッド名からクラスを推測する

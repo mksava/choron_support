@@ -1,13 +1,145 @@
+# 参考
+#   * デフォルト値の設定ファイル
+#   https://github.com/rubocop/rubocop/blob/master/config/default.yml
+inherit_from: .rubocop_todo.yml
+
 AllCops:
-  TargetRubyVersion: 2.6
+  TargetRubyVersion: 3.1.3
+  # Rubocop更新時に新しいルールがあれば適用する
+  NewCops: enable
+  # 使用しているgemに対して拡張ツールを提案してくれるか。
+  # 特に不要(そこまでrubocopに頼っていないため)
+  SuggestExtensions: false
+  Exclude:
+    # デフォルトの設定
+    - "vendor/**/*"
+    - "node_modules/**/*"
+    # テストファイルは対象外にしています
+    - "spec/**/*"
+    # 設定ファイルは特に変更することがないため
+    - "config/**/*"
+    # スクリプトファイルは除外(プロダクトとは関係ないため)
+    - "scripts/**/*"
+    # bin系はあまり変更することがないため
+    - "bin/**/*"
 
+# ドキュメントの無い public class は許可
+Style/Documentation:
+  Enabled: false
+# 空のメソッドを許可
+Style/EmptyMethod:
+  Enabled: false
+# if 内での個別変数代入を許可
+Style/ConditionalAssignment:
+  Enabled: false
+# else 内での if の許可
+Style/IfInsideElse:
+  Enabled: false
+# bad: [1,2,3].map { _1.to_s }, good: [1,2,3].map(&:to_s)
+#   _1.xxx のほうが読みやすいことが多いので false に変更しています
+Style/SymbolProc:
+  Enabled: false
+# 空の else を許可
+Style/EmptyElse:
+  Enabled: false
+# １行の場合に後置ifの強制を許可
+Style/IfUnlessModifier:
+  Enabled: false
+# not禁止を許可
+Style/Not:
+  Enabled: false
+# ガード句の強制を許可
+Style/GuardClause:
+  Enabled: false
+# if文等の空ブロックを許可
+Lint/EmptyConditionalBody:
+  Enabled: false
+# 使い分けが面倒なのでダブルで統一
 Style/StringLiterals:
-  Enabled: true
   EnforcedStyle: double_quotes
+# Hashやメソッドの階層化はスペース分だけ
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
 
-Style/StringLiteralsInInterpolation:
-  Enabled: true
-  EnforcedStyle: double_quotes
+Metrics/ModuleLength:
+  Max: 400
+Metrics/BlockLength:
+  Max: 100
+Metrics/AbcSize:
+  Max: 65
+Metrics/ClassLength:
+  Max: 300
+Metrics/CyclomaticComplexity:
+  Max: 30
+Metrics/PerceivedComplexity:
+  Max: 30
 
 Layout/LineLength:
-  Max: 120
+  Max: 200
+Layout/TrailingEmptyLines:
+  Enabled: false
+Layout/HashAlignment:
+  Enabled: false
+
+# クラスとモジュール名を分けて記載するかどうか
+# 検索容易性を加味してfalseにする
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+# frozen literal をコメントで書くかどうか
+# Ruby3系からデフォルトtrueなのでfalseにする
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# 1行の長さ。基本長くてもOK
+# Layout/LineLength:
+#   Max: 300
+
+# メソッド名の長さ
+# わかりやすさ重視とするので長さは考慮しない
+Metrics/MethodLength:
+  Enabled: false
+
+# Hashの最後の項目にカンマを許すかどうか
+# カンマあったほうが便利なのでfalse
+Style/TrailingCommaInHashLiteral:
+  Enabled: false
+Style/TrailingCommaInArguments:
+  Enabled: false
+Style/TrailingCommaInArrayLiteral:
+  Enabled: false
+
+# ブロックコメントを許可するかどうか
+# 使ってもいいではないかということで許可
+Style/BlockComments:
+  Enabled: false
+
+# self. をつけたほうがわかりやすいときもあるのでfalse(可読性重視)
+Style/RedundantSelf:
+  Enabled: false
+
+# 大文字の時点で定数と読み取れるので無理にmutableにしなくても良い
+Style/MutableConstant:
+  Enabled: false
+
+# _つきのメソッドを内部メソッドとしてはやすことがあるため
+Naming/VariableNumber:
+  Enabled: false
+
+# unless よりも if のほうが見やすいときがあるため
+Style/NegatedIf:
+  Enabled: false
+
+# _ 始まりの変数を許可するか
+# スコープの狭い変数として利用することがあるため許可する
+Lint/UnderscorePrefixedVariableName:
+  Enabled: false
+
+# get とか set という名前のついたメソッドを許可するか
+# DSL的なものを利用するときに利用することもあるため許可する
+Naming/AccessorMethodName:
+  Enabled: false
+
+# DSL的なものを使うためパラメータは7個まで許可
+Metrics/ParameterLists:
+  Max: 7
